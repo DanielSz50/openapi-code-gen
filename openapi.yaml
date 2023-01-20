@@ -3,7 +3,7 @@ info:
   title: Sample API
   version: '0.1'
 paths:
-  /public/health:
+  /health:
     get:
       operationId: Health
       description: Get health check
@@ -14,3 +14,44 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HealthResponse'
+
+  /dog/{name}:
+    get:
+      operationId: GetDog
+      description: Get dog by name
+      parameters:
+        - in: path
+          name: name
+          required: true
+        - in: query
+          name: age
+          required: false
+
+      responses:
+        '200':
+          description: Dog data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DogResponse'
+
+components:
+  schemas:
+    HealthResponse:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+
+    DogResponse:
+      type: object
+      required:
+        - age
+        - weight
+      properties:
+        age:
+          type: integer
+        weight:
+          type: integer

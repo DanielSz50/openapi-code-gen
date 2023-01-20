@@ -17,3 +17,4 @@ if __name__ == '__main__':
     objects = read_openapi('openapi.yaml')
     openapi = OpenApi(objects)
     print(openapi.gen_gin_server_code())
+
