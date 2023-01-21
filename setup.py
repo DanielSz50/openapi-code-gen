@@ -1,4 +1,5 @@
 import yaml
+from openapi_spec_validator import validate_spec
 
 from codegen.openapi import OpenApi
 
@@ -14,7 +15,7 @@ def read_openapi(path):
 
 
 if __name__ == '__main__':
-    objects = read_openapi('openapi.yaml')
-    openapi = OpenApi(objects)
+    spec_dict = read_openapi('openapi.yaml')
+    validate_spec(spec_dict)
+    openapi = OpenApi(spec_dict)
     print(openapi.gen_gin_server_code())
-

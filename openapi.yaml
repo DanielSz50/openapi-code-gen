@@ -1,4 +1,4 @@
-openapi: '3.0.2'
+openapi: '3.0.3'
 info:
   title: Sample API
   version: '0.1'
@@ -20,12 +20,16 @@ paths:
       operationId: GetDog
       description: Get dog by name
       parameters:
-        - in: path
-          name: name
-          required: true
-        - in: query
-          name: age
-          required: false
+      - in: path
+        name: name
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: age
+        required: false
+        schema:
+          type: integer
 
       responses:
         '200':
@@ -33,7 +37,61 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DogResponse'
+                $ref: '#/components/schemas/dogResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    post:
+      operationId: NewDog
+      description: Insert new dog to the db
+      parameters:
+        - in: path
+          name: name
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewDogRequest'
+
+      responses:
+        '200':
+          description: New dog inserted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dogResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /dogs:
+    get:
+      operationId: GetDogs
+      description: Get all dogs
+
+      responses:
+        '200':
+          description: Dogs list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DogsResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
 components:
   schemas:
@@ -43,15 +101,39 @@ components:
         - status
       properties:
         status:
-          type: string
+          type: integer
 
-    DogResponse:
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+        result:
+          type: boolean
+
+    dogResponse:
       type: object
       required:
         - age
-        - weight
       properties:
         age:
           type: integer
         weight:
+          type: number
+          format: float
+
+    DogsResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/dogResponse'
+
+    NewDogRequest:
+      type: object
+      required:
+        - age
+      properties:
+        age:
           type: integer
+        weight:
+          type: number
+          format: float
